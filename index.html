@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div id="table-container">
+
+</div>
+<script src="main.js"></script>
+<script>
+    let queryParams = new URLSearchParams(window.location.search);
+    console.log(queryParams.get(PAGE_PARAM), queryParams.get(PER_PAGE_PARAM),);
+    let tableData = getData(queryParams.get(PAGE_PARAM), queryParams.get(PER_PAGE_PARAM), queryParams.get(SORT_PARAM));
+    let tableHTML = '<table>';
+    tableHTML += '<tr>'
+    for (let fieldName in tableData[0]) {
+        tableHTML += `<th>${fieldName} <a href="?${PAGE_PARAM}=${queryParams.get(PAGE_PARAM)}&${PER_PAGE_PARAM}=${queryParams.get(PER_PAGE_PARAM)}&${SORT_PARAM}=${fieldName}"> &#8593;</a></th>`;
+    }
+    tableHTML += '</tr>';
+    for (let recordData of tableData) {
+        tableHTML += '<tr>';
+        for (let fieldName in recordData) {
+            tableHTML += `<td>${recordData[fieldName]}</td>`;
+        }
+        tableHTML += '</tr>';
+    }
+    tableHTML += '</table>';
+    console.log(tableHTML);
+    let tableElement = document.getElementById('table-container');
+
+
+    tableElement.innerHTML = tableHTML
+        + pagination(queryParams.get(PAGE_PARAM), queryParams.get(PER_PAGE_PARAM), queryParams.get(SORT_PARAM));
+</script>
+</body>
+</html>
